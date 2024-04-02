@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo usuario en la base de datos
       const newUser = await pool.query(
-        'INSERT INTO public.user (id,name, email, phone, company, password, address, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING *',
-        [id,name, email, phone, company, password, address, created_at, updated_at]
+        'INSERT INTO public.user (name, email, phone, company, password, address, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *',
+        [name, email, phone, company, password, address]
       );
   
       res.json({ msg: 'Usuario creado con éxito', user: newUser.rows[0] });
