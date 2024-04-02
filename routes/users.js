@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-      id,name, email, phone, company, password, address, created_at, updated_at
+      name, email, phone, company, password, address
     } = req.body;
   
     try {

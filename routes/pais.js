@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-      id,name, created_at, updated_at
+      name
     } = req.body;
   
     try {
@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo pais en la base de datos
       const newPais = await pool.query(
-        'INSERT INTO public.pais (id,name, created_at, updated_at) VALUES ($1, $2, $3, $4) RETURNING *',
-        [id,name, created_at, updated_at]
+        'INSERT INTO public.pais (name,created_at, updated_at) VALUES ($1, NOW(), NOW()) RETURNING *',
+        [name]
       );
   
       res.json({ msg: 'Pais creado con éxito', pais: newPais.rows[0] });
@@ -45,16 +45,51 @@ router.post('/', async (req, res) => {
   });
   
 
-// Actualizar un pais
-router.put('/:id', (req, res) => {
-  // Aquí iría la lógica para actualizar un pais específico con los datos enviados en req.body
-  res.send(`Pais con ID ${req.params.id} actualizado`);
+// Actualizar un país
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name} = req.body;
+  
+    try {
+        const updateQuery = `
+            UPDATE public.pais
+            SET name = $1, updated_at = NOW()
+            WHERE id = $2
+            RETURNING *;
+        `;
+        const { rows } = await pool.query(updateQuery, [name, id]);
+        //const rows = result.rows;
+  
+        if (rows.length === 0) {
+            return res.status(404).json({ msg: 'País no encontrado' });
+        }
+  
+        res.json({ msg: 'País actualizado', pais: rows[0] });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg: 'Server Error'});
+    }
 });
 
+
 // Eliminar un pais
-router.delete('/:id', (req, res) => {
-  // Aquí iría la lógica para eliminar un pais específico usando req.params.id
-  res.send(`Pais con ID ${req.params.id} eliminado`);
+
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+        const deleteQuery = 'DELETE FROM public.pais WHERE name = $1 RETURNING *;';
+        const { rows } = await pool.query(deleteQuery, [id]);
+  
+        if (rows.length === 0) {
+            return res.status(404).json({ msg: 'País no encontrado' });
+        }
+  
+        res.json({ msg: 'País eliminado', pais: rows[0] });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
 });
 
 module.exports = router;

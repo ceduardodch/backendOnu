@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-      id,name, country, activo, created_at, updated_at
+      name, country, activo,
     } = req.body;
   
     try {
@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo usuario en la base de datos
       const newProve = await pool.query(
-        'INSERT INTO public.proveedor (id,name, country, activo, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [id,name, country, activo, created_at, updated_at]
+        'INSERT INTO public.proveedor (name, country, activo, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *',
+        [name, country, activo]
       );
   
       res.json({ msg: 'Proveedor creado con éxito', proveedor: newProve.rows[0] });

@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-        id,name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod, created_at, updated_at
+        name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod
     } = req.body;
   
     try {
@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo Sustancia en la base de datos
       const newSust = await pool.query(
-        'INSERT INTO public.sustancia (id,name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
-        [id,name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod, created_at, updated_at]
+        'INSERT INTO public.sustancia (name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING *',
+        [name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod]
       );
   
       res.json({ msg: 'Sustancia creado con éxito', sustancia: newSust.rows[0] });

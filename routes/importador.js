@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-      id,name, ruc, user_import, created_at, updated_at
+      name, ruc, user_import
     } = req.body;
   
     try {
@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo importador en la base de datos
       const newProve = await pool.query(
-        'INSERT INTO public.importador (id,name, ruc, user_import, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [id,name, ruc, user_import, created_at, updated_at]
+        'INSERT INTO public.importador (name, ruc, user_import, created_at, updated_at) VALUES ($1, $2, $3,NOW(), NOW()) RETURNING *',
+        [name, ruc, user_import]
       );
   
       res.json({ msg: 'Importador creado con éxito', importador: newProve.rows[0] });
