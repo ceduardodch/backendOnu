@@ -4,7 +4,7 @@
 
 CREATE TABLE IF NOT EXISTS public."user"
 (
-    id integer NOT NULL,
+    id integer SERIAL NOT NULL,
     name character varying COLLATE pg_catalog."default",
     email character varying COLLATE pg_catalog."default",
     phone character varying COLLATE pg_catalog."default",
