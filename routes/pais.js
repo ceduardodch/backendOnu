@@ -4,7 +4,7 @@ const pool = require('../db');
 const cors = require('cors');
 
 // Habilita CORS para todas las rutas
-router.pais(cors());
+router.use(cors());
 // Obtener todos los paiss
 router.get('/', async (req, res) => {
     const { rows } = await pool.query('SELECT * FROM public.pais');
