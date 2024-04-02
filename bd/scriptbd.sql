@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS public."user"
 
 CREATE TABLE IF NOT EXISTS public."pais"
 (
-    id integer NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",    
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS public."pais"
 
 CREATE TABLE IF NOT EXISTS public."proveedor"
 (
-    id integer NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     country character varying COLLATE pg_catalog."default",
     activo character varying COLLATE pg_catalog."default",
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS public."proveedor"
 
 CREATE TABLE IF NOT EXISTS public."sustancia"
 (
-    id integer NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     subpartida character varying COLLATE pg_catalog."default",
     pao character varying COLLATE pg_catalog."default",
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS public."sustancia"
 
 CREATE TABLE IF NOT EXISTS public."importador"
 (
-    id integer NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     ruc character varying COLLATE pg_catalog."default",
     user_import character varying COLLATE pg_catalog."default",
