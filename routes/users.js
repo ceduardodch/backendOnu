@@ -53,7 +53,7 @@ router.put('/:id', async (req, res) => {
 
   try {
       const updateQuery = `
-          UPDATE public.users
+          UPDATE public.user
           SET name = $1, updated_at = NOW()
           WHERE id = $2
           RETURNING *;
@@ -79,7 +79,7 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-      const deleteQuery = 'DELETE FROM public.users WHERE id = $1;';
+      const deleteQuery = 'DELETE FROM public.user WHERE id = $1;';
       const result = await pool.query(deleteQuery, [id]);
 
       if (result.rowCount === 0) {
@@ -99,7 +99,7 @@ router.get('/search', async (req, res) => {
   const { name } = req.query; // Obtén el nombre del query string
 
   try {
-      const searchQuery = 'SELECT * FROM public.users WHERE name ILIKE $1';
+      const searchQuery = 'SELECT * FROM public.user WHERE name ILIKE $1';
       const { rows } = await pool.query(searchQuery, [`%${name}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
       
       if (rows.length === 0) {
