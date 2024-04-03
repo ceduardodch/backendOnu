@@ -45,16 +45,71 @@ router.post('/', async (req, res) => {
   });
   
 
-// Actualizar un usuario
-router.put('/:id', (req, res) => {
-  // Aquí iría la lógica para actualizar un usuario específico con los datos enviados en req.body
-  res.send(`Proveedor con ID ${req.params.id} actualizado`);
+// Actualizar un proveedor
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name} = req.body;
+
+  try {
+      const updateQuery = `
+          UPDATE public.proveedor
+          SET name = $1, updated_at = NOW()
+          WHERE id = $2
+          RETURNING *;
+      `;
+      const { rows } = await pool.query(updateQuery, [name, id]);
+      //const rows = result.rows;
+
+      if (rows.length === 0) {
+          return res.status(404).json({ msg: 'proveedor no encontrado' });
+      }
+
+      res.json({ msg: 'proveedor actualizado', proveedor: rows[0] });
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({msg: 'Server Error'});
+  }
 });
 
-// Eliminar un usuario
-router.delete('/:id', (req, res) => {
-  // Aquí iría la lógica para eliminar un usuario específico usando req.params.id
-  res.send(`Proveedor con ID ${req.params.id} eliminado`);
+
+// Eliminar un proveedor
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const deleteQuery = 'DELETE FROM public.proveedor WHERE id = $1;';
+      const result = await pool.query(deleteQuery, [id]);
+
+      if (result.rowCount === 0) {
+          return res.status(404).json({ msg: 'proveedor no encontrado' });
+      }
+
+      res.json({ msg: 'proveedor eliminado con éxito' });
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ msg: 'Error del servidor' });
+  }
+});
+
+
+// Buscar proveedores por nombre
+router.get('/search', async (req, res) => {
+  const { name } = req.query; // Obtén el nombre del query string
+
+  try {
+      const searchQuery = 'SELECT * FROM public.proveedor WHERE name ILIKE $1';
+      const { rows } = await pool.query(searchQuery, [`%${name}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
+      
+      if (rows.length === 0) {
+          return res.status(404).json({ msg: 'No se encontraron proveedores con ese nombre' });
+      }
+
+      res.json(rows);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ msg: 'Error del servidor' });
+  }
 });
 
 module.exports = router;

@@ -78,17 +78,37 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
   
     try {
-        const deleteQuery = 'DELETE FROM public.pais WHERE name = $1 RETURNING *;';
-        const { rows } = await pool.query(deleteQuery, [id]);
+        const deleteQuery = 'DELETE FROM public.pais WHERE id = $1;';
+        const result = await pool.query(deleteQuery, [id]);
   
-        if (rows.length === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({ msg: 'País no encontrado' });
         }
   
-        res.json({ msg: 'País eliminado', pais: rows[0] });
+        res.json({ msg: 'País eliminado con éxito' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: 'Error del servidor' });
+    }
+});
+
+
+// Buscar países por nombre
+router.get('/search', async (req, res) => {
+    const { name } = req.query; // Obtén el nombre del query string
+
+    try {
+        const searchQuery = 'SELECT * FROM public.pais WHERE name ILIKE $1';
+        const { rows } = await pool.query(searchQuery, [`%${name}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ msg: 'No se encontraron países con ese nombre' });
+        }
+
+        res.json(rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Error del servidor' });
     }
 });
 

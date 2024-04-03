@@ -45,16 +45,71 @@ router.post('/', async (req, res) => {
   });
   
 
-// Actualizar un Sustancia
-router.put('/:id', (req, res) => {
-  // Aquí iría la lógica para actualizar un Sustancia específico con los datos enviados en req.body
-  res.send(`Sustancia con ID ${req.params.id} actualizado`);
+// Actualizar un sustancia
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name} = req.body;
+
+  try {
+      const updateQuery = `
+          UPDATE public.sustancia
+          SET name = $1, updated_at = NOW()
+          WHERE id = $2
+          RETURNING *;
+      `;
+      const { rows } = await pool.query(updateQuery, [name, id]);
+      //const rows = result.rows;
+
+      if (rows.length === 0) {
+          return res.status(404).json({ msg: 'Sustancia no encontrado' });
+      }
+
+      res.json({ msg: 'Sustancia actualizada', sustancia: rows[0] });
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({msg: 'Server Error'});
+  }
 });
 
-// Eliminar un Sustancia
-router.delete('/:id', (req, res) => {
-  // Aquí iría la lógica para eliminar un Sustancia específico usando req.params.id
-  res.send(`Sustancia con ID ${req.params.id} eliminado`);
+
+// Eliminar un sustancia
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const deleteQuery = 'DELETE FROM public.sustancia WHERE id = $1;';
+      const result = await pool.query(deleteQuery, [id]);
+
+      if (result.rowCount === 0) {
+          return res.status(404).json({ msg: 'Sustancia no encontrado' });
+      }
+
+      res.json({ msg: 'Sustancia eliminado con éxito' });
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ msg: 'Error del servidor' });
+  }
+});
+
+
+// Buscar sustancias por nombre
+router.get('/search', async (req, res) => {
+  const { name } = req.query; // Obtén el nombre del query string
+
+  try {
+      const searchQuery = 'SELECT * FROM public.sustancia WHERE name ILIKE $1';
+      const { rows } = await pool.query(searchQuery, [`%${name}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
+      
+      if (rows.length === 0) {
+          return res.status(404).json({ msg: 'No se encontraron países con ese nombre' });
+      }
+
+      res.json(rows);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ msg: 'Error del servidor' });
+  }
 });
 
 module.exports = router;
