@@ -4,6 +4,7 @@ const importadorRoutes = require('./routes/importador');
 const paisRoutes = require('./routes/pais');
 const proveedorRoutes = require('./routes/proveedor');
 const sustanciaRoutes = require('./routes/sustancia');
+const importRoutes = require('./routes/importacion');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use('/importadors', importadorRoutes);
 app.use('/paises', paisRoutes);
 app.use('/proveedors', proveedorRoutes);
 app.use('/sustancias', sustanciaRoutes);
+app.use('/imports', importRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
