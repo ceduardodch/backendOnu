@@ -4,7 +4,7 @@
 
 CREATE TABLE IF NOT EXISTS public."user"
 (
-    id integer SERIAL NOT NULL,
+    id  SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     email character varying COLLATE pg_catalog."default",
     phone character varying COLLATE pg_catalog."default",
@@ -12,21 +12,20 @@ CREATE TABLE IF NOT EXISTS public."user"
     password character varying COLLATE pg_catalog."default",
     address character varying COLLATE pg_catalog."default",
     created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    CONSTRAINT user_pkey PRIMARY KEY (id)
+    updated_at timestamp without time zone
 )
 
 CREATE TABLE IF NOT EXISTS public."pais"
 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name character varying COLLATE pg_catalog."default",    
+    id SERIAL PRIMARY KEY,
+    name character varying COLLATE pg_catalog."default",
     created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    CONSTRAINT pais_pkey PRIMARY KEY (id)
-)
+    updated_at timestamp without time zone
+);
 
 CREATE TABLE IF NOT EXISTS public."proveedor"
 (
+    id SERIAL PRIMARY KEY,
     id SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     country character varying COLLATE pg_catalog."default",
@@ -37,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public."proveedor"
 
 CREATE TABLE IF NOT EXISTS public."sustancia"
 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     subpartida character varying COLLATE pg_catalog."default",
     pao character varying COLLATE pg_catalog."default",
@@ -46,13 +45,12 @@ CREATE TABLE IF NOT EXISTS public."sustancia"
     activo character varying COLLATE pg_catalog."default",
     cupo_prod character varying COLLATE pg_catalog."default",
     created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    CONSTRAINT sust_pkey PRIMARY KEY (id)
+    updated_at timestamp without time zone
 )
 
 CREATE TABLE IF NOT EXISTS public."importador"
 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     ruc character varying COLLATE pg_catalog."default",
     user_import character varying COLLATE pg_catalog."default",
