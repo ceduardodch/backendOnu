@@ -57,6 +57,13 @@ CREATE TABLE IF NOT EXISTS public."importador"
     updated_at timestamp without time zone
 )
 
+CREATE TABLE IF NOT EXISTS public."anio"
+(
+    id SERIAL PRIMARY KEY,
+    name integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+)
 
 -- Table: public.onu_imports
 
