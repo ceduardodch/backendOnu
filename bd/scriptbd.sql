@@ -61,6 +61,18 @@ CREATE TABLE IF NOT EXISTS public."anio"
 (
     id SERIAL PRIMARY KEY,
     name integer,
+    activo character varying COLLATE pg_catalog."default",
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+)
+
+CREATE TABLE IF NOT EXISTS public."cupo"
+(
+    id SERIAL PRIMARY KEY,
+    importador character varying COLLATE pg_catalog."default",
+    anio character varying COLLATE pg_catalog."default",
+    hfc character varying COLLATE pg_catalog."default",
+    hcfc character varying COLLATE pg_catalog."default",
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 )
@@ -97,7 +109,7 @@ CREATE TABLE IF NOT EXISTS public.imports
     quota2 numeric(20,2),
     to_quota2 numeric(20,2),
     total_weight2 numeric(20,2),
-    total_weight_kg2 numeric(20,2),
+    total_weight_kg2 numeric(20,2)
 )
 
 -- Table: public.onu_detail_imports
@@ -132,6 +144,6 @@ CREATE TABLE IF NOT EXISTS public.imports_detail
     price numeric(20,2),
     data_file_test bigint,
     name_product character varying(255) COLLATE pg_catalog."default",
-    product_hardware bigint,
+    product_hardware bigint
     
 )
