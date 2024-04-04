@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-      name
+      name,activo
     } = req.body;
   
     try {
@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo anio en la base de datos
       const newAnio = await pool.query(
-        'INSERT INTO public.anio (name,created_at, updated_at) VALUES ($1, NOW(), NOW()) RETURNING *',
-        [name]
+        'INSERT INTO public.anio (name,activo,created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING *',
+        [name,activo]
       );
   
       res.json({ msg: 'anio creado con éxito', anio: newAnio.rows[0] });
