@@ -26,12 +26,11 @@ CREATE TABLE IF NOT EXISTS public."pais"
 CREATE TABLE IF NOT EXISTS public."proveedor"
 (
     id SERIAL PRIMARY KEY,
-    id SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     country character varying COLLATE pg_catalog."default",
     activo character varying COLLATE pg_catalog."default",
     created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    updated_at timestamp without time zone
 )
 
 CREATE TABLE IF NOT EXISTS public."sustancia"
@@ -55,8 +54,7 @@ CREATE TABLE IF NOT EXISTS public."importador"
     ruc character varying COLLATE pg_catalog."default",
     user_import character varying COLLATE pg_catalog."default",
     created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    CONSTRAINT import_pkey PRIMARY KEY (id)
+    updated_at timestamp without time zone
 )
 
 
