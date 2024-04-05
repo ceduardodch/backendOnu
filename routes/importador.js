@@ -48,16 +48,16 @@ router.post('/', async (req, res) => {
 // Actualizar un importador
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name} = req.body;
+  const { name, ruc, user_import} = req.body;
 
   try {
       const updateQuery = `
           UPDATE public.importador
-          SET name = $1, updated_at = NOW()
-          WHERE id = $2
+          SET name = $1, ruc = $2, user_import = $3, updated_at = NOW()
+          WHERE id = $4
           RETURNING *;
       `;
-      const { rows } = await pool.query(updateQuery, [name, id]);
+      const { rows } = await pool.query(updateQuery, [name, ruc, user_import, id]);
       //const rows = result.rows;
 
       if (rows.length === 0) {

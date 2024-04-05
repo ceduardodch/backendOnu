@@ -48,16 +48,16 @@ router.post('/', async (req, res) => {
 // Actualizar un cupo
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name} = req.body;
+  const { importador, anio, hfc, hcfc} = req.body;
 
   try {
       const updateQuery = `
           UPDATE public.cupo
-          SET name = $1, updated_at = NOW()
-          WHERE id = $2
+          SET importador = $1, anio = $2, hfc = $3, hcfc = $4, updated_at = NOW()
+          WHERE id = $5
           RETURNING *;
       `;
-      const { rows } = await pool.query(updateQuery, [name, id]);
+      const { rows } = await pool.query(updateQuery, [importador, anio, hfc, hcfc, id]);
       //const rows = result.rows;
 
       if (rows.length === 0) {
@@ -95,11 +95,11 @@ router.delete('/:id', async (req, res) => {
 
 // Buscar cupos por nombre
 router.get('/search', async (req, res) => {
-  const { name } = req.query; // Obtén el nombre del query string
+  const { importador } = req.query; // Obtén el nombre del query string
 
   try {
-      const searchQuery = 'SELECT * FROM public.cupo WHERE name ILIKE $1';
-      const { rows } = await pool.query(searchQuery, [`%${name}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
+      const searchQuery = 'SELECT * FROM public.cupo WHERE importador ILIKE $1';
+      const { rows } = await pool.query(searchQuery, [`%${importador}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
       
       if (rows.length === 0) {
           return res.status(404).json({ msg: 'No se encontraron países con ese nombre' });

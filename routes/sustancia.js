@@ -48,16 +48,16 @@ router.post('/', async (req, res) => {
 // Actualizar un sustancia
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name} = req.body;
+  const { name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod} = req.body;
 
   try {
       const updateQuery = `
           UPDATE public.sustancia
-          SET name = $1, updated_at = NOW()
-          WHERE id = $2
+          SET name = $1, subpartida =$2, pao = $3, pcg = $4, grupo_sust = $5, activo = $6, cupo_prod = $7, updated_at = NOW()
+          WHERE id = $8
           RETURNING *;
       `;
-      const { rows } = await pool.query(updateQuery, [name, id]);
+      const { rows } = await pool.query(updateQuery, [name, subpartida, pao, pcg, grupo_sust, activo, cupo_prod, id]);
       //const rows = result.rows;
 
       if (rows.length === 0) {

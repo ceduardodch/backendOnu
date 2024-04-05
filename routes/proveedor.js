@@ -48,16 +48,16 @@ router.post('/', async (req, res) => {
 // Actualizar un proveedor
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name} = req.body;
+  const { name, country, activo} = req.body;
 
   try {
       const updateQuery = `
           UPDATE public.proveedor
-          SET name = $1, updated_at = NOW()
-          WHERE id = $2
+          SET name = $1, country = $2, activo = $3, updated_at = NOW()
+          WHERE id = $4
           RETURNING *;
       `;
-      const { rows } = await pool.query(updateQuery, [name, id]);
+      const { rows } = await pool.query(updateQuery, [name, country, activo, id]);
       //const rows = result.rows;
 
       if (rows.length === 0) {
