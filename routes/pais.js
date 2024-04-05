@@ -53,11 +53,11 @@ router.put('/:id', async (req, res) => {
     try {
         const updateQuery = `
             UPDATE public.pais
-            SET name = $1, updated_at = NOW()
-            WHERE id = $2
+            SET name = $2, updated_at = NOW()
+            WHERE id = $1
             RETURNING *;
         `;
-        const { rows } = await pool.query(updateQuery, [name, id]);
+        const { rows } = await pool.query(updateQuery, [id, name]);
         //const rows = result.rows;
   
         if (rows.length === 0) {
