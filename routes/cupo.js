@@ -27,7 +27,7 @@ router.get('/:name', async (req, res) => {
     res.json(rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Error del servidor');
+    res.status(500).send('Error del servidor'+err.message);
   }
 }
 );
@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
       res.json({ msg: 'Cupo creado con éxito', cupo: newSust.rows[0] });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Error del servidor');
+      res.status(500).send('Error del servidor'+err.message);
     }
   });
   
@@ -82,7 +82,7 @@ router.put('/:id', async (req, res) => {
       res.json({ msg: 'Cupo actualizada', cupo: rows[0] });
   } catch (err) {
       console.error(err.message);
-      res.status(500).json({msg: 'Server Error'});
+      res.status(500).json({msg: 'Server Error'+err.message});
   }
 });
 
@@ -103,7 +103,7 @@ router.delete('/:id', async (req, res) => {
       res.json({ msg: 'Cupo eliminado con éxito' });
   } catch (err) {
       console.error(err.message);
-      res.status(500).json({ msg: 'Error del servidor' });
+      res.status(500).json({ msg: 'Error del servidor'+err.message });
   }
 });
 
@@ -123,7 +123,7 @@ router.get('/search', async (req, res) => {
       res.json(rows);
   } catch (err) {
       console.error(err.message);
-      res.status(500).json({ msg: 'Error del servidor' });
+      res.status(500).json({ msg: 'Error del servidor'+err.message });
   }
 });
 
