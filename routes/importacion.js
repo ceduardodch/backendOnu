@@ -31,13 +31,14 @@ router.get('/', async (req, res) => {
     }
   });
   // Obtener todos los importacion por el id del importador
-router.get('/:importador', async (req, res) => {
-    const { importador } = req.params;
+router.get('/:importacion', async (req, res) => {
+  console.log(req.params);
+    const { importacion } = req.params;
     try {
 
         // Consultar maestro
         const masterQuery = 'SELECT * FROM public.importacion where id = $1'; 
-        const masterResult = await pool.query(masterQuery, [importador]);
+        const masterResult = await pool.query(masterQuery, [importacion]);
   
         if (masterResult.rows.length === 0) {
             return res.status(404).json({ message: 'Master records not found' });
@@ -49,6 +50,8 @@ router.get('/:importador', async (req, res) => {
           const detailResult = await pool.query(detailQuery);
           masterResult.rows[i].details = detailResult.rows;
         }
+        res.json(masterResult.rows);
+
       }
     
     catch (err) {
