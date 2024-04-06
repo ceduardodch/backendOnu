@@ -30,9 +30,37 @@ router.get('/', async (req, res) => {
         res.status(500).send('Server Error');
     }
   });
+  // Obtener todos los importacion por el id del importador
+router.get('/:importador', async (req, res) => {
+    const { importador } = req.params;
+    try {
+
+        // Consultar maestro
+        const masterQuery = 'SELECT * FROM public.importacion where id = $1'; 
+        const masterResult = await pool.query(masterQuery, [importador]);
+  
+        if (masterResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Master records not found' });
+        }
+  
+        // Consultar detalles asociados a cada maestro
+        for (let i = 0; i < masterResult.rows.length; i++) {
+          const detailQuery = `SELECT * FROM public.importacion_detail WHERE importacion = ${masterResult.rows[i].id}`;
+          const detailResult = await pool.query(detailQuery);
+          masterResult.rows[i].details = detailResult.rows;
+        }
+      }
+    
+    catch (err) {
+
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+  });
+
 
 //Trae solo el total de la solicitud de importacion para calcular el cupo restate
-router.get('/:importador', async (req, res) => {
+router.get('/cuposolicitud/:importador', async (req, res) => {
     const { importador } = req.params;
     try {
         const { rows } = await pool.query('SELECT COALESCE(sum(tota_solicitud), 0) as total_solicitud FROM public.importacion WHERE importador = $1', [importador]);      if (rows.length === 0) {

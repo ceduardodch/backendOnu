@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS public."cupo"
 (
     id SERIAL PRIMARY KEY,
     importador character varying COLLATE pg_catalog."default",
+    importador_id int,
     anio character varying COLLATE pg_catalog."default",
     hfc character varying COLLATE pg_catalog."default",
     hcfc character varying COLLATE pg_catalog."default",

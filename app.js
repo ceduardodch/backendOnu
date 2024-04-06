@@ -28,6 +28,8 @@ app.use('/api/anios', anioRoutes);
 app.use('/api/gruposusts', gruposustRoutes);
 app.use('/api/cupos', cupoRoutes);
 app.use('/api/importacion', importRoutes);
+app.use('/api/importacion/cuposolicitud', importRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
