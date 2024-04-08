@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 // Obtener un grupo_sust por su ID
 router.get('/:id', (req, res) => {
   // Aquí iría la lógica para obtener un grupo_sust específico usando req.params.id
-  res.send(`Detalle del grupo_sust con ID ${req.params.id}`);
+  res.send(`Detalle del grupo con ID ${req.params.id}`);
 });
 
 router.post('/', async (req, res) => {
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
       // Verificar si el grupo_sust ya existe
       const { rows } = await pool.query('SELECT * FROM public.grupo_sust WHERE name = $1', [name]);
       if (rows.length > 0) {
-        return res.status(400).json({ msg: 'El grupo_sust ya existe' });
+        return res.status(400).json({ msg: 'El grupo ya existe' });
       }
 
       console.log('body', req.body);
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
         [name,activo]
       );
   
-      res.json({ msg: 'grupo_sust creado con éxito', grupo_sust: newGrupo_sust.rows[0] });
+      res.json({ msg: 'grupo creado con éxito', grupo_sust: newGrupo_sust.rows[0] });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Error del servidor');
@@ -53,7 +53,7 @@ router.put('/:id', async (req, res) => {
     try {
         const updateQuery = `
             UPDATE public.grupo_sust
-            SET name = $1, activo = $2 updated_at = NOW()
+            SET name = $1, activo = $2, updated_at = NOW()
             WHERE id = $3
             RETURNING *;
         `;
@@ -61,10 +61,10 @@ router.put('/:id', async (req, res) => {
         //const rows = result.rows;
   
         if (rows.length === 0) {
-            return res.status(404).json({ msg: 'Grupo_sust no encontrado' });
+            return res.status(404).json({ msg: 'Grupo no encontrado' });
         }
   
-        res.json({ msg: 'Grupo_sust actualizado', grupo_sust: rows[0] });
+        res.json({ msg: 'Grupo actualizado', grupo_sust: rows[0] });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({msg: 'Server Error'});
@@ -85,7 +85,7 @@ router.delete('/:id', async (req, res) => {
             return res.status(404).json({ msg: 'Grupo_sust no encontrado' });
         }
   
-        res.json({ msg: 'Grupo_sust eliminado con éxito' });
+        res.json({ msg: 'Grupo eliminado con éxito' });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ msg: 'Error del servidor' });
