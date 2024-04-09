@@ -17,6 +17,21 @@ router.get('/:id', (req, res) => {
   res.send(`Detalle del Cupo con ID ${req.params.id}`);
 });
 
+router.get('/:name', async (req, res) => {
+  const { importador } = req.params;
+  try {
+    const { rows } = await pool.query('SELECT * FROM public.cupo WHERE importador = $1', [importador]);
+    if (rows.length === 0) {
+      return res.status(404).json({ msg: 'Cupo no encontrado' });
+    }
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Error del servidor');
+  }
+}
+);
+
 router.post('/', async (req, res) => {
     const {
         importador, anio, hfc, hcfc
