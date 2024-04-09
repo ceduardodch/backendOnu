@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS public."proveedor"
     id SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     country character varying COLLATE pg_catalog."default",
-    activo character varying COLLATE pg_catalog."default",
+    activo boolean,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 )
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS public."grupo_sust"
 (
     id SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
-    activo character varying COLLATE pg_catalog."default",
+    activo boolean,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 )
