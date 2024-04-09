@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS public."sustancia"
     pao character varying COLLATE pg_catalog."default",
     pcg character varying COLLATE pg_catalog."default",
     grupo_sust character varying COLLATE pg_catalog."default",
-    activo character varying COLLATE pg_catalog."default",
-    cupo_prod character varying COLLATE pg_catalog."default",
+    activo boolean,
+    cupo_prod boolean,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 )

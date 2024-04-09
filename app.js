@@ -6,6 +6,7 @@ const proveedorRoutes = require('./routes/proveedor');
 const sustanciaRoutes = require('./routes/sustancia');
 const anioRoutes = require('./routes/anio');
 const cupoRoutes = require('./routes/cupo');
+const gruposustRoutes = require('./routes/grupo_sust');
 const importRoutes = require('./routes/importacion');
 
 const app = express();
@@ -18,6 +19,7 @@ app.use('/paises', paisRoutes);
 app.use('/proveedors', proveedorRoutes);
 app.use('/sustancias', sustanciaRoutes);
 app.use('/anios', anioRoutes);
+app.use('/gruposusts', gruposustRoutes);
 app.use('/cupos', cupoRoutes);
 app.use('/imports', importRoutes);
 
