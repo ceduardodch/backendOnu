@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public."importador"
     id SERIAL PRIMARY KEY,
     name character varying COLLATE pg_catalog."default",
     ruc character varying COLLATE pg_catalog."default",
+    phone character varying COLLATE pg_catalog."default",
     user_import character varying COLLATE pg_catalog."default",
     created_at timestamp without time zone,
     updated_at timestamp without time zone
