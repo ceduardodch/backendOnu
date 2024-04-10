@@ -21,11 +21,7 @@ app.use('/sustancias', sustanciaRoutes);
 app.use('/anios', anioRoutes);
 app.use('/gruposusts', gruposustRoutes);
 app.use('/cupos', cupoRoutes);
-<<<<<<< HEAD
 app.use('/importacion', importRoutes);
-=======
-
->>>>>>> 694fffbe2a5a94c6d5ecb2d299d8389b45e22302
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
