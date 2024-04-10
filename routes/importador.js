@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-      name, ruc, user_import
+      name, ruc, phone, user_import
     } = req.body;
   
     try {
@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo importador en la base de datos
       const newProve = await pool.query(
-        'INSERT INTO public.importador (name, ruc, user_import, created_at, updated_at) VALUES ($1, $2, $3,NOW(), NOW()) RETURNING *',
-        [name, ruc, user_import]
+        'INSERT INTO public.importador (name, ruc, phone, user_import, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *',
+        [name, ruc, phone, user_import]
       );
   
       res.json({ msg: 'Importador creado con éxito', importador: newProve.rows[0] });
@@ -48,16 +48,16 @@ router.post('/', async (req, res) => {
 // Actualizar un importador
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, ruc, user_import} = req.body;
+  const { name, ruc, phone, user_import} = req.body;
 
   try {
       const updateQuery = `
           UPDATE public.importador
-          SET name = $1, ruc = $2, user_import = $3, updated_at = NOW()
-          WHERE id = $4
+          SET name = $1, ruc = $2, phone = $3, user_import = $4, updated_at = NOW()
+          WHERE id = $5
           RETURNING *;
       `;
-      const { rows } = await pool.query(updateQuery, [name, ruc, user_import, id]);
+      const { rows } = await pool.query(updateQuery, [name, ruc, phone, user_import, id]);
       //const rows = result.rows;
 
       if (rows.length === 0) {

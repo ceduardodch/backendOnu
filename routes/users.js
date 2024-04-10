@@ -49,16 +49,16 @@ router.post('/', async (req, res) => {
 // Actualizar un Users
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone, company} = req.body;
+  const { name, email, phone, company, password, address} = req.body;
 
   try {
       const updateQuery = `
           UPDATE public.user
-          SET name = $1, email =$2, phone = $3, company = $4, updated_at = NOW()
-          WHERE id = $5
+          SET name = $1, email =$2, phone = $3, company = $4, password = $5, address= $6, updated_at = NOW()
+          WHERE id = $7
           RETURNING *;
       `;
-      const { rows } = await pool.query(updateQuery, [name, email, phone, company, id]);
+      const { rows } = await pool.query(updateQuery, [name, email, phone, company,password, address, id]);
       //const rows = result.rows;
 
       if (rows.length === 0) {
