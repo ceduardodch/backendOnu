@@ -5,6 +5,7 @@ const cors = require('cors');
 
 // Habilita CORS para todas las rutas
 router.use(cors());
+
 // Obtener todos los importacion
 router.get('/', async (req, res) => {
     try {
@@ -17,11 +18,11 @@ router.get('/', async (req, res) => {
         }
   
         // Consultar detalles asociados a cada maestro
-        for (let i = 0; i < masterResult.rows.length; i++) {
-          const detailQuery = `SELECT * FROM public.importacion_detail WHERE importacion = ${masterResult.rows[i].id}`;
-          const detailResult = await pool.query(detailQuery);
-          masterResult.rows[i].details = detailResult.rows;
-        }
+        //for (let i = 0; i < masterResult.rows.length; i++) {
+        //  const detailQuery = `SELECT * FROM public.importacion_detail WHERE importacion = ${masterResult.rows[i].id}`;
+         // const detailResult = await pool.query(detailQuery);
+         // masterResult.rows[i].details = detailResult.rows;
+       // }
   
         res.json(masterResult.rows);
     } catch (err) {
@@ -41,41 +42,52 @@ router.get('/:importador', async (req, res) => {
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Error del servidor');
+    }});
+
+router.post('/', async (req, res) => {
+  const body = req.body;    
+  try {
+    // Iniciar transacción
+    await pool.query('BEGIN');
+
+    // Insertar en la tabla maestra
+    const masterInsert = 'INSERT INTO public.importacion(authorization_date, month, cupo_asignado, status, cupo_restante, tota_solicitud, total_pesokg, vue, data_file, importador, years, country, proveedor, grupo) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id';
+    const masterValues = [body.authorization_date, body.month, body.cupo_asignado, body.status, body.cupo_restante, body.tota_solicitud, body.total_pesokg, body.vue, body.data_file, body.importador, body.years, body.pais, body.proveedor, body.grupo];
+    const masterResult = await pool.query(masterInsert, masterValues);
+
+    // Insertar en la tabla de detalles
+    for (const detail of body.details) {
+      const detailInsert = 'INSERT INTO public.importacion_detail(cif, fob, peso_kg, peso_pao, sustancia, subpartida, ficha_file, importacion) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
+      const detailValues = [detail.cif, detail.fob, detail.peso_kg, detail.pao, detail.sustancia, detail.subpartida, detail.ficha_file, masterResult.rows[0].id];
+      await pool.query(detailInsert, detailValues);
     }
+
+    await pool.query('COMMIT');
+    res.status(201).send('Importación creada con éxito');
+  } catch (err) {
+    await pool.query('ROLLBACK');
+    console.error(err);
+    res.status(500).send('Error del servidor');
   }
-    );
+});
 
-
-    app.post('/', async (req, res) => {
-        const body = req.body;
-      
-        try {
-          // Iniciar transacción
-          await db.tx(async t => {
-            // Insertar en la tabla maestra
-            const masterInsert = 'INSERT INTO public.importacion(authorization_date, month, cupo_asignado, status, cupo_restante, tota_solicitud, total_pesokg, vue, data_file, importador, years, pais, proveedor) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id';
-            const masterValues = [body.authorization_date, body.month, body.cupo_asignado, body.status, body.cupo_restante, body.tota_solicitud, body.total_pesokg, body.vue, body.data_file, body.importador, body.years, body.pais, body.proveedor];
-            const masterResult = await t.one(masterInsert, masterValues);
-      
-            // Insertar en la tabla de detalles
-            for (const detail of body.details) {
-              const detailInsert = 'INSERT INTO public.importacion_detail(cif, fob, peso_kg, pao, sustancia, subpartida, ficha_file, importacion_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
-              const detailValues = [detail.cif, detail.fob, detail.peso_kg, detail.pao, detail.sustancia, detail.subpartida, detail.ficha_file, masterResult.id];
-              await t.none(detailInsert, detailValues);
-            }
-          });
-      
-          res.status(201).send('Importación creada con éxito');
-        } catch (err) {
-          console.error(err);
-          res.status(500).send('Error del servidor');
-        }
-      });
-      
-      app.listen(3000, () => {
-        console.log('Servidor escuchando en el puerto 3000');
-      });
-
-
-
+// Establecer el mecanismo para delete por id con el método DELETE master y detail
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  try
+  {
+    await pool.query('BEGIN');
+    await pool.query('DELETE FROM public.importacion_detail WHERE importacion = $1', [id]);
+    await pool.query('DELETE FROM public.importacion WHERE id = $1', [id]);
+    await pool.query('COMMIT');
+    res.json(`Importación ${id} eliminada con éxito`);
+  }
+  catch (err
+  ) {
+    await pool.query('ROLLBACK');
+    console.error(err.message);
+    res.status(500).send('Error del servidor');
+  }
+}
+);
 module.exports = router;

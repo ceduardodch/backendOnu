@@ -7,9 +7,13 @@ const sustanciaRoutes = require('./routes/sustancia');
 const anioRoutes = require('./routes/anio');
 const cupoRoutes = require('./routes/cupo');
 const gruposustRoutes = require('./routes/grupo_sust');
+const importRoutes = require('./routes/importacion');
 
 
 const app = express();
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(express.json()); // Para parsear JSON en el cuerpo de las peticiones
 

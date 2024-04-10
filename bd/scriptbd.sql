@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS public."cupo"
 
 -- DROP TABLE IF EXISTS public.onu_imports;
 
+drop table public.importacion;
 CREATE TABLE IF NOT EXISTS public.importacion
 (
     id serial NOT NULL,
@@ -99,11 +100,11 @@ CREATE TABLE IF NOT EXISTS public.importacion
     authorization_date date,
     month character varying(255),
     cupo_asignado numeric(19,2),
-    status integer,
+    status character varying(255),
     cupo_restante numeric(19,2),
     tota_solicitud numeric(19,2),
     total_pesoKg numeric(19,2),
-    vue character varying(255),
+    vue character varying(255) UNIQUE,
     factura_file bytea,
     dai_file bytea,
     data_file bytea,
@@ -113,8 +114,8 @@ CREATE TABLE IF NOT EXISTS public.importacion
     years bigint,
     country character varying(255),
     proveedor character varying(255),
-    send_email boolean
-
+    send_email boolean,
+	grupo character varying(255)
 )
 
 -- Table: public.onu_detail_imports
