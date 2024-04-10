@@ -90,42 +90,40 @@ CREATE TABLE IF NOT EXISTS public."cupo"
 
 -- DROP TABLE IF EXISTS public.onu_imports;
 
-CREATE TABLE IF NOT EXISTS public.imports
+CREATE TABLE IF NOT EXISTS public.importacion
 (
     id serial NOT NULL,
     created_at timestamp,
     updated_at timestamp,
     authorization_date date,
     month character varying(255),
-    quota numeric(19,2),
-    status_select integer,
-    to_quota numeric(19,2),
-    total_co2 numeric(19,2),
-    total_weight numeric(19,2),
+    cupo_asignado numeric(19,2),
+    status integer,
+    cupo_restante numeric(19,2),
+    tota_solicitud numeric(19,2),
+    total_pesoKg numeric(19,2),
     vue character varying(255),
-    billing_file bigint,
-    dai_file bigint,
-    data_file bigint,
-    importer bigint,
-    order_file bigint,
+    factura_file bytea,
+    dai_file bytea,
+    data_file bytea,
+    importador character varying(255),
+    orden_file bytea,
     user_id int,
     years bigint,
-    total_weight_verificated numeric(19,2),
-    country_id int,
-    provider_id bigint,
-    send_email boolean,
-    total_weight_kg numeric(20,2),
-    quota2 numeric(20,2),
-    to_quota2 numeric(20,2),
-    total_weight2 numeric(20,2),
-    total_weight_kg2 numeric(20,2)
+    country character varying(255),
+    proveedor character varying(255),
+    send_email boolean
+
 )
 
 -- Table: public.onu_detail_imports
 
 -- DROP TABLE IF EXISTS public.onu_detail_imports;
 
-CREATE TABLE IF NOT EXISTS public.imports_detail
+
+
+drop table importacion_detail
+CREATE TABLE IF NOT EXISTS public.importacion_detail
 (
     id serial NOT NULL,
     created_at timestamp ,
@@ -133,26 +131,12 @@ CREATE TABLE IF NOT EXISTS public.imports_detail
     cif numeric(20,2),
     co2 numeric(20,2),
     fob numeric(20,2),
-    observation character varying(255) COLLATE pg_catalog."default",
-    request character varying(255) COLLATE pg_catalog."default",
-    weight numeric(20,2),
-    weightpao numeric(20,2),
+    peso_kg numeric(20,2),
+    peso_pao numeric(20,2),
     country bigint,
-    imports bigint,
-    product bigint,
-    provider bigint,
-    cif_verificated numeric(20,2),
-    co2verificated numeric(20,2),
-    fob_verificated numeric(20,2),
-    observation_verificated character varying(255) COLLATE pg_catalog."default",
-    subheading character varying(255) COLLATE pg_catalog."default",
-    subheading_product_verificated character varying(255) COLLATE pg_catalog."default",
-    weight_verificated numeric(20,2),
-    weightpao_verificated numeric(20,2),
-    product_verificated bigint,
+    importacion bigint,
+    sustancia character varying(255),
+	subpartida character varying(255),
     price numeric(20,2),
-    data_file_test bigint,
-    name_product character varying(255) COLLATE pg_catalog."default",
-    product_hardware bigint
-    
-)
+    ficha_file bytea
+);
