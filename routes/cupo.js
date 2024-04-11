@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
       // Verificar si el Cupo ya existe
       const { rows } = await pool.query('SELECT * FROM public.cupo WHERE importador = $1', [importador]);
       if (rows.length > 0) {
-        return res.status(400).json({ msg: 'La Cupo ya existe' });
+        return res.status(400).json({ msg: 'El Cupo ya existe' });
       }
 
       console.log('body', req.body);
