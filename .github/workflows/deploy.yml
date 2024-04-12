@@ -19,15 +19,22 @@ jobs:
     - name: Deploy to server
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-        # Navegar al directorio del proyecto
-        cd /var/www/backend
+        # Navigate to the project directory
+        cd /var/www/backendOnu
         
-        # Actualizar el repositorio
+        # Update the repository
         git pull
         
-        # Instalar dependencias de Node.js
+        # Install Node.js dependencies
         npm install --production
         
-        # Reiniciar el servidor Express usando un script de inicio
-        npm start &
+        # Ensure PM2 is installed globally
+        npm install pm2@latest -g
+        
+        # Start or restart the application using PM2
+        pm2 reload ecosystem.config.js || pm2 start ecosystem.config.js
+        
+        # If you do not have an ecosystem.config.js, you can use the line below instead:
+        # pm2 restart all || pm2 start app.js --name "backendOnu"
+        
         EOF
