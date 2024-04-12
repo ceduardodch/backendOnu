@@ -11,11 +11,7 @@ router.get('/', async (req, res) => {
     res.send(rows);
   });
 
-// Obtener un usuario por su ID
-router.get('/:id', (req, res) => {
-  // Aquí iría la lógica para obtener un usuario específico usando req.params.id
-  res.send(`Detalle del usuario con ID ${req.params.id}`);
-});
+
 
 router.post('/', async (req, res) => {
     const {
