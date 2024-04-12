@@ -17,17 +17,17 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(express.json()); // Para parsear JSON en el cuerpo de las peticiones
 
-app.use('/users', userRoutes);
-app.use('/users/login', userRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/users/login', userRoutes);
 
-app.use('/importadors', importadorRoutes);
-app.use('/paises', paisRoutes);
-app.use('/proveedors', proveedorRoutes);
-app.use('/sustancias', sustanciaRoutes);
-app.use('/anios', anioRoutes);
-app.use('/gruposusts', gruposustRoutes);
-app.use('/cupos', cupoRoutes);
-app.use('/importacion', importRoutes);
+app.use('/api/importadors', importadorRoutes);
+app.use('/api/paises', paisRoutes);
+app.use('/api/proveedors', proveedorRoutes);
+app.use('/api/sustancias', sustanciaRoutes);
+app.use('/api/anios', anioRoutes);
+app.use('/api/gruposusts', gruposustRoutes);
+app.use('/api/cupos', cupoRoutes);
+app.use('/api/importacion', importRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
