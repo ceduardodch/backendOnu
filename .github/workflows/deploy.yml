@@ -21,6 +21,8 @@ jobs:
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
         # Navigate to the project directory
         cd /var/www/backendOnu
+        sudo chown -R $USER:$USER /var/www/backendOnu
+
         
         # Update the repository
         git pull
