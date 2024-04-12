@@ -43,8 +43,6 @@ router.post('/', async (req, res) => {
       res.status(500).send('Error del servidor');
     }
   });
-  
-
 
 // Actualizar un Users
 router.put('/:id', async (req, res) => {
@@ -92,7 +90,24 @@ router.delete('/:id', async (req, res) => {
       res.status(500).json({ msg: 'Error del servidor' });
   }
 });
+// Comparar usuario y clave para el login 
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
+  try {
+      const loginQuery = 'SELECT * FROM public.user WHERE name = $1 AND password = $2';
+      const { rows } = await pool.query(loginQuery, [email, password]);
+
+      if (rows.length === 0) {
+          return res.status(400).json({ msg: 'Credenciales inválidas' });
+      }
+
+      res.json({ msg: 'Inicio de sesión exitoso', user: rows[0] });
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ msg: 'Error del servidor' });
+  }
+});
 
 // Buscar Userses por nombre
 router.get('/search', async (req, res) => {

@@ -18,6 +18,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.json()); // Para parsear JSON en el cuerpo de las peticiones
 
 app.use('/users', userRoutes);
+app.use('/users/login', userRoutes);
+
 app.use('/importadors', importadorRoutes);
 app.use('/paises', paisRoutes);
 app.use('/proveedors', proveedorRoutes);
