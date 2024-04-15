@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS public.importacion
     dai_file bytea,
     data_file bytea,
     importador character varying(255),
+    importador_id int,
     orden_file bytea,
     user_id int,
     years bigint,
@@ -117,6 +118,8 @@ CREATE TABLE IF NOT EXISTS public.importacion
     send_email boolean,
 	grupo character varying(255)
 )
+
+
 
 -- Table: public.onu_detail_imports
 
