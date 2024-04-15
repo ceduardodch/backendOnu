@@ -34,7 +34,7 @@ router.get('/:name', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-        importador, anio, hfc, hcfc
+        importador_id,importador, anio, hfc, hcfc
     } = req.body;
   
     try {
@@ -48,8 +48,8 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo Cupo en la base de datos
       const newSust = await pool.query(
-        'INSERT INTO public.cupo (importador, anio, hfc, hcfc, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *',
-        [importador, anio, hfc, hcfc]
+        'INSERT INTO public.cupo (importador_id,importador, anio, hfc, hcfc, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *',
+        [importador_id,importador, anio, hfc, hcfc]
       );
   
       res.json({ msg: 'Cupo creado con éxito', cupo: newSust.rows[0] });
