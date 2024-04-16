@@ -83,7 +83,7 @@ router.post('/', async (req, res) => {
 
     // Insertar en la tabla maestra
     const masterInsert = 'INSERT INTO public.importacion(authorization_date,solicitud_date, month, cupo_asignado, status, cupo_restante, tota_solicitud, total_pesokg, vue, data_file, importador, years, country, proveedor, grupo, importador_id,created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,$15,$16,NOW(),NOW()) RETURNING id';
-    const masterValues = [body.authorization_date,dody.solicitud_date, body.month, body.cupo_asignado, body.status, body.cupo_restante, body.tota_solicitud, body.total_pesokg, body.vue, body.data_file, body.importador, body.years, body.pais, body.proveedor, body.grupo, body.importador_id];
+    const masterValues = [body.authorization_date,body.solicitud_date, body.month, body.cupo_asignado, body.status, body.cupo_restante, body.tota_solicitud, body.total_pesokg, body.vue, body.data_file, body.importador, body.years, body.pais, body.proveedor, body.grupo, body.importador_id];
     const masterResult = await pool.query(masterInsert, masterValues);
 
     // Insertar en la tabla de detalles
