@@ -10,7 +10,7 @@ router.use(cors());
 router.get('/', async (req, res) => {
     try {
         // Consultar maestro
-        const masterQuery = 'SELECT * FROM public.importacion';
+        const masterQuery = 'SELECT id,created_at,updated_at,month,cupo_asignado,status,cupo_restante,tota_solicitud,total_pesoKg,vue,importador,user_id,years,country,proveedor,send_email,grupo FROM public.importacion';
         const masterResult = await pool.query(masterQuery);
   
         if (masterResult.rows.length === 0) {
@@ -27,12 +27,43 @@ router.get('/', async (req, res) => {
         res.json(masterResult.rows);
     } catch (err) {
         console.error(err.message);
+        res.status(500).send('Server Error'+err.message);
+    }
+  });
+  // Obtener todos los importacion por el id del importador
+router.get('/:importacion', async (req, res) => {
+  console.log(req.params);
+    const { importacion } = req.params;
+    try {
+
+        // Consultar maestro
+        const masterQuery = 'SELECT * FROM public.importacion where id = $1'; 
+        const masterResult = await pool.query(masterQuery, [importacion]);
+  
+        if (masterResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Master records not found' });
+        }
+  
+        // Consultar detalles asociados a cada maestro
+        for (let i = 0; i < masterResult.rows.length; i++) {
+          const detailQuery = `SELECT * FROM public.importacion_detail WHERE importacion = ${masterResult.rows[i].id}`;
+          const detailResult = await pool.query(detailQuery);
+          masterResult.rows[i].details = detailResult.rows;
+        }
+        res.json(masterResult.rows);
+
+      }
+    
+    catch (err) {
+
+        console.error(err.message);
         res.status(500).send('Server Error');
     }
   });
 
+
 //Trae solo el total de la solicitud de importacion para calcular el cupo restate
-router.get('/:importador', async (req, res) => {
+router.get('/cuposolicitud/:importador', async (req, res) => {
     const { importador } = req.params;
     try {
         const { rows } = await pool.query('SELECT COALESCE(sum(tota_solicitud), 0) as total_solicitud FROM public.importacion WHERE importador = $1', [importador]);      if (rows.length === 0) {
@@ -41,7 +72,7 @@ router.get('/:importador', async (req, res) => {
       res.json(rows[0]);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Error del servidor');
+      res.status(500).send('Error del servidor'+err.message);
     }});
 
 router.post('/', async (req, res) => {
@@ -51,13 +82,13 @@ router.post('/', async (req, res) => {
     await pool.query('BEGIN');
 
     // Insertar en la tabla maestra
-    const masterInsert = 'INSERT INTO public.importacion(authorization_date, month, cupo_asignado, status, cupo_restante, tota_solicitud, total_pesokg, vue, data_file, importador, years, country, proveedor, grupo) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id';
-    const masterValues = [body.authorization_date, body.month, body.cupo_asignado, body.status, body.cupo_restante, body.tota_solicitud, body.total_pesokg, body.vue, body.data_file, body.importador, body.years, body.pais, body.proveedor, body.grupo];
+    const masterInsert = 'INSERT INTO public.importacion(authorization_date,solicitud_date, month, cupo_asignado, status, cupo_restante, tota_solicitud, total_pesokg, vue, data_file, importador, years, country, proveedor, grupo, importador_id,created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,$15,$16,NOW(),NOW()) RETURNING id';
+    const masterValues = [body.authorization_date,body.solicitud_date, body.month, body.cupo_asignado, body.status, body.cupo_restante, body.tota_solicitud, body.total_pesokg, body.vue, body.data_file, body.importador, body.years, body.pais, body.proveedor, body.grupo, body.importador_id];
     const masterResult = await pool.query(masterInsert, masterValues);
 
     // Insertar en la tabla de detalles
     for (const detail of body.details) {
-      const detailInsert = 'INSERT INTO public.importacion_detail(cif, fob, peso_kg, peso_pao, sustancia, subpartida, ficha_file, importacion) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
+      const detailInsert = 'INSERT INTO public.importacion_detail(cif, fob, peso_kg, peso_pao, sustancia, subpartida, ficha_file, importacion,created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8,NOW(),NOW())';
       const detailValues = [detail.cif, detail.fob, detail.peso_kg, detail.pao, detail.sustancia, detail.subpartida, detail.ficha_file, masterResult.rows[0].id];
       await pool.query(detailInsert, detailValues);
     }
@@ -67,7 +98,7 @@ router.post('/', async (req, res) => {
   } catch (err) {
     await pool.query('ROLLBACK');
     console.error(err);
-    res.status(500).send('Error del servidor');
+    res.status(500).send('Error del servidor'+err.message);
   }
 });
 
@@ -86,7 +117,7 @@ router.delete('/:id', async (req, res) => {
   ) {
     await pool.query('ROLLBACK');
     console.error(err.message);
-    res.status(500).send('Error del servidor');
+    res.status(500).send('Error del servidor'+err.message);
   }
 }
 );

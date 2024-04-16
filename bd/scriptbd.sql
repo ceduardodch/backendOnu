@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS public."cupo"
 (
     id SERIAL PRIMARY KEY,
     importador character varying COLLATE pg_catalog."default",
+    importador_id int,
     anio character varying COLLATE pg_catalog."default",
     hfc character varying COLLATE pg_catalog."default",
     hcfc character varying COLLATE pg_catalog."default",
@@ -98,6 +99,7 @@ CREATE TABLE IF NOT EXISTS public.importacion
     created_at timestamp,
     updated_at timestamp,
     authorization_date date,
+    solicitud_date date,
     month character varying(255),
     cupo_asignado numeric(19,2),
     status character varying(255),
@@ -109,6 +111,7 @@ CREATE TABLE IF NOT EXISTS public.importacion
     dai_file bytea,
     data_file bytea,
     importador character varying(255),
+    importador_id int,
     orden_file bytea,
     user_id int,
     years bigint,
@@ -117,6 +120,8 @@ CREATE TABLE IF NOT EXISTS public.importacion
     send_email boolean,
 	grupo character varying(255)
 )
+
+
 
 -- Table: public.onu_detail_imports
 

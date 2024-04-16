@@ -30,7 +30,7 @@ router.get('/:name', async (req, res) => {
     res.json(rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Error del servidor');
+    res.status(500).send('Error del servidor'+err.message);
   }
 }
 );
@@ -39,7 +39,7 @@ router.get('/:name', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const {
-        importador, anio, hfc, hcfc
+        importador_id,importador, anio, hfc, hcfc
     } = req.body;
   
     try {
@@ -53,14 +53,14 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo Cupo en la base de datos
       const newSust = await pool.query(
-        'INSERT INTO public.cupo (importador, anio, hfc, hcfc, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *',
-        [importador, anio, hfc, hcfc]
+        'INSERT INTO public.cupo (importador_id,importador, anio, hfc, hcfc, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *',
+        [importador_id,importador, anio, hfc, hcfc]
       );
   
       res.json({ msg: 'Cupo creado con éxito', cupo: newSust.rows[0] });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Error del servidor');
+      res.status(500).send('Error del servidor'+err.message);
     }
   });
   
@@ -87,7 +87,7 @@ router.put('/:id', async (req, res) => {
       res.json({ msg: 'Cupo actualizada', cupo: rows[0] });
   } catch (err) {
       console.error(err.message);
-      res.status(500).json({msg: 'Server Error'});
+      res.status(500).json({msg: 'Server Error'+err.message});
   }
 });
 
@@ -108,7 +108,7 @@ router.delete('/:id', async (req, res) => {
       res.json({ msg: 'Cupo eliminado con éxito' });
   } catch (err) {
       console.error(err.message);
-      res.status(500).json({ msg: 'Error del servidor' });
+      res.status(500).json({ msg: 'Error del servidor'+err.message });
   }
 });
 
@@ -128,7 +128,7 @@ router.get('/search', async (req, res) => {
       res.json(rows);
   } catch (err) {
       console.error(err.message);
-      res.status(500).json({ msg: 'Error del servidor' });
+      res.status(500).json({ msg: 'Error del servidor'+err.message });
   }
 });
 
