@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
         res.json(masterResult.rows);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).send('Server Error'+err.message);
     }
   });
   // Obtener todos los importacion por el id del importador
@@ -72,7 +72,7 @@ router.get('/cuposolicitud/:importador', async (req, res) => {
       res.json(rows[0]);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Error del servidor');
+      res.status(500).send('Error del servidor'+err.message);
     }});
 
 router.post('/', async (req, res) => {
@@ -98,7 +98,7 @@ router.post('/', async (req, res) => {
   } catch (err) {
     await pool.query('ROLLBACK');
     console.error(err);
-    res.status(500).send('Error del servidor');
+    res.status(500).send('Error del servidor'+err.message);
   }
 });
 
@@ -117,7 +117,7 @@ router.delete('/:id', async (req, res) => {
   ) {
     await pool.query('ROLLBACK');
     console.error(err.message);
-    res.status(500).send('Error del servidor');
+    res.status(500).send('Error del servidor'+err.message);
   }
 }
 );
