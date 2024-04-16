@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS public.importacion
     created_at timestamp,
     updated_at timestamp,
     authorization_date date,
+    solicitud_date date,
     month character varying(255),
     cupo_asignado numeric(19,2),
     status character varying(255),
