@@ -8,7 +8,7 @@ const anioRoutes = require('./routes/anio');
 const cupoRoutes = require('./routes/cupo');
 const gruposustRoutes = require('./routes/grupo_sust');
 const importRoutes = require('./routes/importacion');
-/*
+
 const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -33,8 +33,8 @@ app.use('/api/importacion/cuposolicitud', importRoutes);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
-});*/
-
+});
+/*
 const app = express();
 
 
@@ -57,3 +57,4 @@ app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
+*/
