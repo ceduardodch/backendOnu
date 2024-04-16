@@ -147,3 +147,14 @@ CREATE TABLE IF NOT EXISTS public.importacion_detail
     price numeric(20,2),
     ficha_file bytea
 );
+
+
+drop table files;
+CREATE TABLE IF NOT EXISTS public.files
+(
+    id serial NOT NULL,
+	name varchar(255),
+    ficha_file bytea,
+	created_at timestamp ,
+    updated_at timestamp 
+);

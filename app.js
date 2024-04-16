@@ -8,6 +8,7 @@ const anioRoutes = require('./routes/anio');
 const cupoRoutes = require('./routes/cupo');
 const gruposustRoutes = require('./routes/grupo_sust');
 const importRoutes = require('./routes/importacion');
+const uploadRoutes = require('./routes/upload');
 
 
 const app = express();
@@ -28,6 +29,8 @@ app.use('/api/anios', anioRoutes);
 app.use('/api/gruposusts', gruposustRoutes);
 app.use('/api/cupos', cupoRoutes);
 app.use('/api/importacion', importRoutes);
+app.use('/api/upload', uploadRoutes);
+
 app.use('/api/importacion/cuposolicitud', importRoutes);
 
 
