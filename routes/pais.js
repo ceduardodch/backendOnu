@@ -7,14 +7,31 @@ const cors = require('cors');
 router.use(cors());
 // Obtener todos los paiss
 router.get('/', async (req, res) => {
-    const { rows } = await pool.query('SELECT * FROM public.pais');
-    res.send(rows);
+    /*const { rows } = await pool.query('SELECT * FROM public.pais');
+    res.send(rows);*/
+
+    try {
+      const { rows } = await pool.query('SELECT * FROM public.pais');
+      res.json(rows);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Error del servidor');
+    }
   });
 
 // Obtener un pais por su ID
-router.get('/:id', (req, res) => {
-  // Aquí iría la lógica para obtener un pais específico usando req.params.id
-  res.send(`Detalle del pais con ID ${req.params.id}`);
+router.get('/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      const { rows } = await pool.query('SELECT * FROM public.pais WHERE id = $1', [id]);
+      if (rows.length === 0) {
+          return res.status(404).json({ msg: 'País no encontrado' });
+      }
+      res.json(rows[0]);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Error del servidor');
+  }
 });
 
 router.post('/', async (req, res) => {
@@ -95,9 +112,11 @@ router.delete('/:id', async (req, res) => {
 
 // Buscar países por nombre
 router.get('/search', async (req, res) => {
-    const { name } = req.query; // Obtén el nombre del query string
 
+  const { name } = req.query; // Obtén el nombre del query string
+    
     try {
+        
         const searchQuery = 'SELECT * FROM public.pais WHERE name ILIKE $1';
         const { rows } = await pool.query(searchQuery, [`%${name}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
         
