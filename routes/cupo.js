@@ -17,8 +17,11 @@ router.get('/:id', (req, res) => {
   res.send(`Detalle del Cupo con ID ${req.params.id}`);
 });
 
+//busqueda
 router.get('/:name', async (req, res) => {
-  const { importador } = req.params;
+  const { 
+    importador  
+  } = req.params;
   try {
     const { rows } = await pool.query('SELECT * FROM public.cupo WHERE importador = $1', [importador]);
     if (rows.length === 0) {
@@ -31,6 +34,8 @@ router.get('/:name', async (req, res) => {
   }
 }
 );
+
+///////////////////////////////////////////////////
 
 router.post('/', async (req, res) => {
     const {
