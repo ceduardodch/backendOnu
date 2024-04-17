@@ -7,14 +7,30 @@ const cors = require('cors');
 router.use(cors());
 
 router.get('/:fileId', async (req, res) => {
-    try {
-      const files = await pool.query('SELECT * FROM public.files WHERE id = $1', [req.params.fileId]);
-      res.json(files.rows);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Error del servidor'+err.message);
+  try {
+    const files = await pool.query('SELECT file FROM public.files WHERE id = $1', [req.params.fileId]);
+    const file = files.rows[0];
+
+    // Asegúrate de que el archivo existe
+    if (!file) {
+      return res.status(404).send('Archivo no encontrado');
     }
-  });
+
+    // Asegúrate de que el archivo tiene un campo 'file' que contiene los datos binarios del archivo
+    if (!file.file) {
+      return res.status(500).send('El archivo no tiene datos');
+    }
+
+    // Convierte los datos binarios a una cadena base64
+    const base64 = file.file.toString('base64');
+
+    // Envía la cadena base64 como respuesta
+    res.json({ file: base64 });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Error del servidor: ' + err.message);
+  }
+});
 
 router.post('/', async (req, res) => {
     const {
