@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS public.importacion_detail
     sustancia character varying(255),
 	subpartida character varying(255),
     price numeric(20,2),
-    ficha_file bytea
+    ficha_id int
 );
 
 
