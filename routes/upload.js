@@ -9,19 +9,14 @@ router.use(cors());
 router.get('/:fileId', async (req, res) => {
   try {
     const files = await pool.query('SELECT file FROM public.files WHERE id = $1', [req.params.fileId]);
-    const buffer = files.rows[0].file;
-    let base64Data = buffer.toString('base64');
 
     // Asegúrate de que el archivo existe
-    if (!base64Data) {
+    if (!files.rows[0]) {
       return res.status(404).send('Archivo no encontrado');
     }
 
-    // Elimina el prefijo incorrecto si existe
-    const incorrectPrefix = 'dataapplication/pdfbase64';
-    if (base64Data.startsWith(incorrectPrefix)) {
-      base64Data = base64Data.substring(incorrectPrefix.length);
-    }
+    const buffer = files.rows[0].file;
+    const base64Data = buffer.toString('base64');
 
     // Añade el prefijo correcto para un archivo PDF en base64
     const base64PDF = 'data:application/pdf;base64,' + base64Data;
@@ -33,6 +28,7 @@ router.get('/:fileId', async (req, res) => {
     res.status(500).send('Error del servidor: ' + err.message);
   }
 });
+
 
 router.post('/', async (req, res) => {
     const {
