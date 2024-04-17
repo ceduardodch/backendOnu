@@ -17,8 +17,11 @@ router.get('/:fileId', async (req, res) => {
       return res.status(404).send('Archivo no encontrado');
     }
 
+    // Añade el prefijo correcto para un archivo PDF en base64
+    const base64PDF = 'data:application/pdf;base64,' + base64Data;
+
     // Envía la cadena base64 como respuesta
-    res.json({ file: base64Data });
+    res.json({ file: base64PDF });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Error del servidor: ' + err.message);
