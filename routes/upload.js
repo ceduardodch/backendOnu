@@ -10,11 +10,17 @@ router.get('/:fileId', async (req, res) => {
   try {
     const files = await pool.query('SELECT file FROM public.files WHERE id = $1', [req.params.fileId]);
     const buffer = files.rows[0].file;
-    const base64Data = buffer.toString('base64');
+    let base64Data = buffer.toString('base64');
 
     // Asegúrate de que el archivo existe
     if (!base64Data) {
       return res.status(404).send('Archivo no encontrado');
+    }
+
+    // Elimina el prefijo incorrecto si existe
+    const incorrectPrefix = 'dataapplication/pdfbase64';
+    if (base64Data.startsWith(incorrectPrefix)) {
+      base64Data = base64Data.substring(incorrectPrefix.length);
     }
 
     // Añade el prefijo correcto para un archivo PDF en base64
