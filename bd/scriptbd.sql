@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS public.files
 (
     id serial NOT NULL,
 	name varchar(255),
-    ficha_file bytea,
+    file bytea,
 	created_at timestamp ,
     updated_at timestamp 
 );

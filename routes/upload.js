@@ -8,11 +8,13 @@ router.use(cors());
 
 router.get('/:fileId', async (req, res) => {
   try {
+
     const files = await pool.query('SELECT file FROM public.files WHERE id = $1', [req.params.fileId]);
-    const file = files.rows[0];
+    const buffer = files.rows[0].file;
+    const base64Data = buffer.toString('base64');
 
     // Asegúrate de que el archivo existe
-    if (!file) {
+    if (!base64Data) {
       return res.status(404).send('Archivo no encontrado');
     }
 
@@ -22,10 +24,9 @@ router.get('/:fileId', async (req, res) => {
     }
 
     // Convierte los datos binarios a una cadena base64
-    const base64 = file.file.toString('base64');
 
     // Envía la cadena base64 como respuesta
-    res.json({ file: base64 });
+    res.json({ file: base64Data });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Error del servidor: ' + err.message);
@@ -39,11 +40,12 @@ router.post('/', async (req, res) => {
   
     try {
       console.log('body', req.body);
+      const buffer = Buffer.from(file, 'base64');
   
       // Insertar el nuevo usuario en la base de datos
       const newFile = await pool.query(
         'INSERT INTO public.files (name, file, created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING *',
-        [name, file]
+        [name, buffer]
       );
   
       res.json({ msg: 'Archivo creado con éxito', file: newFile.rows[0].id });
