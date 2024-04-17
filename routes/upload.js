@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const cors = require('cors');
-
+const fs = require('fs');
+const path = require('path');
 // Habilita CORS para todas las rutas
 router.use(cors());
 
@@ -17,6 +18,7 @@ router.get('/:fileId', async (req, res) => {
 
     const buffer = files.rows[0].file;
     const base64Data = buffer.toString('base64');
+
 
     // Añade el prefijo correcto para un archivo PDF en base64
     const base64PDF = 'data:application/pdf;base64,' + base64Data;
