@@ -8,7 +8,6 @@ router.use(cors());
 
 router.get('/:fileId', async (req, res) => {
   try {
-
     const files = await pool.query('SELECT file FROM public.files WHERE id = $1', [req.params.fileId]);
     const buffer = files.rows[0].file;
     const base64Data = buffer.toString('base64');
@@ -17,13 +16,6 @@ router.get('/:fileId', async (req, res) => {
     if (!base64Data) {
       return res.status(404).send('Archivo no encontrado');
     }
-
-    // Asegúrate de que el archivo tiene un campo 'file' que contiene los datos binarios del archivo
-    if (!file.file) {
-      return res.status(500).send('El archivo no tiene datos');
-    }
-
-    // Convierte los datos binarios a una cadena base64
 
     // Envía la cadena base64 como respuesta
     res.json({ file: base64Data });
