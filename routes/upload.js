@@ -5,7 +5,16 @@ const cors = require('cors');
 
 // Habilita CORS para todas las rutas
 router.use(cors());
-// Obtener todos los usuarios
+
+router.get('/:fileId', async (req, res) => {
+    try {
+      const files = await pool.query('SELECT * FROM public.files WHERE id = $1', [req.params.fileId]);
+      res.json(files.rows);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Error del servidor'+err.message);
+    }
+  });
 
 router.post('/', async (req, res) => {
     const {
