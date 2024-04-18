@@ -92,34 +92,42 @@ CREATE TABLE IF NOT EXISTS public."cupo"
 
 -- DROP TABLE IF EXISTS public.onu_imports;
 
-drop table public.importacion;
+-- Table: public.importacion
+DROP TABLE IF EXISTS public.importacion;
+
 CREATE TABLE IF NOT EXISTS public.importacion
 (
-    id serial NOT NULL,
-    created_at timestamp,
-    updated_at timestamp,
+    id serial,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     authorization_date date,
     solicitud_date date,
-    month character varying(255),
+    month character varying(255) COLLATE pg_catalog."default",
     cupo_asignado numeric(19,2),
-    status character varying(255),
+    status character varying(255) COLLATE pg_catalog."default",
     cupo_restante numeric(19,2),
-    tota_solicitud numeric(19,2),
-    total_pesoKg numeric(19,2),
-    vue character varying(255) UNIQUE,
-    factura_file bytea,
-    dai_file bytea,
-    data_file bytea,
-    importador character varying(255),
-    importador_id int,
-    orden_file bytea,
-    user_id int,
+    total_solicitud numeric(19,2),
+    total_pesokg numeric(19,2),
+    vue character varying(255) COLLATE pg_catalog."default",
+    factura_file_it integer,
+    dai_file_id integer,
+    data_file_id integer,
+    importador character varying(255) COLLATE pg_catalog."default",
+    importador_id integer,
+    orden_file integer,
+    user_id integer,
     years bigint,
-    country character varying(255),
-    proveedor character varying(255),
+    country character varying(255) COLLATE pg_catalog."default",
+    proveedor character varying(255) COLLATE pg_catalog."default",
     send_email boolean,
-	grupo character varying(255)
+    grupo character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT importacion_vue_key UNIQUE (vue)
 )
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.importacion
+    OWNER to onuapp;
 
 
 

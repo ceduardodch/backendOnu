@@ -94,8 +94,8 @@ router.post('/', async (req, res) => {
     }
 
     await pool.query('COMMIT');
-    res.status(201).send('Importación creada con éxito');
-  } catch (err) {
+    res.status(201).json({ message: 'Importación creada con éxito' });
+    } catch (err) {
     await pool.query('ROLLBACK');
     console.error(err);
     res.status(500).send('Error del servidor'+err.message);
