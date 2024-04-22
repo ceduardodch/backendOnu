@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
   
       // Insertar el nuevo importador en la base de datos
       const newProve = await pool.query(
-        'INSERT INTO public.importador (name, ruc,phone, user_import, created_at, updated_at) VALUES ($1, $2, $3,NOW(), NOW()) RETURNING *',
+        'INSERT INTO public.importador (name, ruc,phone, user_import, created_at, updated_at) VALUES ($1, $2, $3, $4,NOW(), NOW()) RETURNING *',
         [name, ruc,phone, user_import]
       );
   
