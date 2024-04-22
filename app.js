@@ -14,7 +14,9 @@ const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-/*
+
+
+
 app.use(express.json()); // Para parsear JSON en el cuerpo de las peticiones
 
 app.use('/api/users', userRoutes);
@@ -37,7 +39,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
-*/
+/*
 
 
 app.use(express.json()); // Para parsear JSON en el cuerpo de las peticiones
@@ -54,8 +56,13 @@ app.use('/gruposusts', gruposustRoutes);
 app.use('/cupos', cupoRoutes);
 app.use('/importacion', importRoutes);
 
+app.use('/upload', uploadRoutes);
+
+app.use('/importacion/cuposolicitud', importRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
+*/

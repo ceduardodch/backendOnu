@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-/*
+
 const pool = new Pool({
   user: 'onuapp',
   host: '108.181.201.110',
@@ -8,7 +8,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-*/
+/*
 
 const pool = new Pool({
   user: 'postgres',
@@ -18,4 +18,4 @@ const pool = new Pool({
   port: 5432,
 });
 
-module.exports = pool;
+module.exports = pool;*/
