@@ -33,6 +33,8 @@ app.use('/api/importacion', importRoutes);
 app.use('/api/upload', uploadRoutes);
 
 app.use('/api/importacion/cuposolicitud', importRoutes);
+app.use('/api/importacion/aprove', importRoutes);
+
 
 
 const PORT = process.env.PORT || 3000;

@@ -121,4 +121,16 @@ router.delete('/:id', async (req, res) => {
   }
 }
 );
+
+// Aprobar importacion por id
+router.put('/status/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('UPDATE public.importacion SET status = $1 WHERE id = $2', ['Aprobado', id]);
+    res.json(`Importación ${id} aprobada con éxito`);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Error del servidor'+err.message);
+  }
+});
 module.exports = router;

@@ -37,6 +37,6 @@ jobs:
         pm2 reload ecosystem.config.js || pm2 start ecosystem.config.js
         
         # If you do not have an ecosystem.config.js, you can use the line below instead:
-        # pm2 restart all || pm2 start app.js --name "backendOnu"
+        pm2 restart all || pm2 start app.js --name "backendOnu"
         
         EOF

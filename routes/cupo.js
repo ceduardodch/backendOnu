@@ -11,19 +11,15 @@ router.get('/', async (req, res) => {
     res.send(rows);
   });
 
-// Obtener un Cupo por su ID
-router.get('/:id', (req, res) => {
-  // Aquí iría la lógica para obtener un Cupo específico usando req.params.id
-  res.send(`Detalle del Cupo con ID ${req.params.id}`);
-});
+
 
 //busqueda
-router.get('/:name', async (req, res) => {
+router.get('/:id', async (req, res) => {
   const { 
-    importador  
+    id  
   } = req.params;
   try {
-    const { rows } = await pool.query('SELECT * FROM public.cupo WHERE importador = $1', [importador]);
+    const { rows } = await pool.query('SELECT * FROM public.cupo WHERE importador_id = $1', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ msg: 'Cupo no encontrado' });
     }
