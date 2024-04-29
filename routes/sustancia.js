@@ -95,21 +95,25 @@ router.delete('/:id', async (req, res) => {
 
 // Buscar sustancias por nombre
 router.get('/search', async (req, res) => {
-  const { name } = req.query; // Obtén el nombre del query string
+  const { name } = req.query; 
 
-  try {
-      const searchQuery = 'SELECT * FROM public.sustancia WHERE name ILIKE $1';
-      const { rows } = await pool.query(searchQuery, [`%${name}%`]); // Usar ILIKE para búsqueda insensible a mayúsculas/minúsculas
-      
-      if (rows.length === 0) {
-          return res.status(404).json({ msg: 'No se encontraron países con ese nombre' });
-      }
+  try {    
+    const searchQuery = 'SELECT * FROM public.sustancia WHERE name ILIKE $1 AND activo = TRUE';
+    
+    const values = [`%${name || ''}%`];
+    const { rows } = await pool.query(searchQuery, values);
+    
+    if (rows.length === 0) {
+      // No se encontraron registros
+      return res.status(404).json({ msg: 'No se encontraron sustancias con ese nombre que estén activas' });
+    }
 
-      res.json(rows);
-  } catch (err) {
-      console.error(err.message);
-      res.status(500).json({ msg: 'Error del servidor' });
+    res.json(rows);
+  } catch (err) {  
+    console.error(err.message);
+    res.status(500).json({ msg: 'Error del servidor' });
   }
 });
+
 
 module.exports = router;
