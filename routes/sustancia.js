@@ -6,9 +6,26 @@ const cors = require('cors');
 // Habilita CORS para todas las rutas
 router.use(cors());
 // Obtener todos los Sustancias
-router.get('/', async (req, res) => {
-    const { rows } = await pool.query('SELECT * FROM public.sustancia');
-    res.send(rows);
+
+  router.get('/all', async (req, res) => {
+    try {
+      const { rows } = await pool.query('SELECT * FROM public.sustancia');
+        res.send(rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Error del servidor');
+    }
+  });
+  
+  // Obtener solo los grupo_sust activos
+  router.get('/active', async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM public.sustancia WHERE activo = true');
+        res.send(rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Error del servidor');
+    }
   });
 
 // Obtener un Sustancia por su ID

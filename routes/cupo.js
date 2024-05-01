@@ -34,58 +34,70 @@ router.get('/:id', async (req, res) => {
 ///////////////////////////////////////////////////
 
 router.post('/', async (req, res) => {
-    const {
-        importador_id,importador, anio, hfc, hcfc
-    } = req.body;
-  
-    try {
-      // Verificar si el Cupo ya existe
-      const { rows } = await pool.query('SELECT * FROM public.cupo WHERE anio = $1', [anio]);
-      if (rows.length > 0) {
-        return res.status(400).json({ msg: 'El Cupo ya existe' });
-      }
+  const {
+      importador_id, importador, anio, hfc, hcfc
+  } = req.body;
 
-      console.log('body', req.body);
-  
-      // Insertar el nuevo Cupo en la base de datos
-      const newSust = await pool.query(
-        'INSERT INTO public.cupo (importador_id,importador, anio, hfc, hcfc, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *',
-        [importador_id,importador, anio, hfc, hcfc]
-      );
-  
-      res.json({ msg: 'Cupo creado con éxito', cupo: newSust.rows[0] });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Error del servidor'+err.message);
+  try {
+    // Verificar si el Cupo ya existe para el mismo importador y año
+    const { rows } = await pool.query('SELECT * FROM public.cupo WHERE importador_id = $1 AND anio = $2', [importador_id, anio]);
+    if (rows.length > 0) {
+      return res.status(400).json({ msg: 'Ya existe un cupo paera el importador en el mismo año.' });
     }
-  });
-  
+
+    console.log('body', req.body);
+
+    // Insertar el nuevo Cupo en la base de datos
+    const newCupo = await pool.query(
+      'INSERT INTO public.cupo (importador_id, importador, anio, hfc, hcfc, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *',
+      [importador_id, importador, anio, hfc, hcfc]
+    );
+
+    res.json({ msg: 'Cupo creado con éxito', cupo: newCupo.rows[0] });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Error del servidor: ' + err.message);
+  }
+});
 
 // Actualizar un cupo
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { importador, anio, hfc, hcfc} = req.body;
+  const { importador_id, importador, anio, hfc, hcfc } = req.body;
 
   try {
+      // Primero, verificar si existe otro cupo con el mismo importador y año
+      const existsQuery = `
+          SELECT * FROM public.cupo
+          WHERE importador_id = $1 AND anio = $2 AND id != $3;
+      `;
+      const existsResult = await pool.query(existsQuery, [importador_id, anio, id]);
+      
+      if (existsResult.rows.length > 0) {
+          // Si existe un registro, no permitir la actualización
+          return res.status(400).json({ msg: 'Ya existe un cupo para este importador en el mismo año.' });
+      }
+
+      // Si no existe, proceder con la actualización
       const updateQuery = `
           UPDATE public.cupo
-          SET importador = $1, anio = $2, hfc = $3, hcfc = $4, updated_at = NOW()
-          WHERE id = $5
+          SET importador_id = $1, importador = $2, anio = $3, hfc = $4, hcfc = $5, updated_at = NOW()
+          WHERE id = $6
           RETURNING *;
       `;
-      const { rows } = await pool.query(updateQuery, [importador, anio, hfc, hcfc, id]);
-      //const rows = result.rows;
+      const updateResult = await pool.query(updateQuery, [importador_id, importador, anio, hfc, hcfc, id]);
 
-      if (rows.length === 0) {
+      if (updateResult.rows.length === 0) {
           return res.status(404).json({ msg: 'Cupo no encontrado' });
       }
 
-      res.json({ msg: 'Cupo actualizada', cupo: rows[0] });
+      res.json({ msg: 'Cupo actualizado', cupo: updateResult.rows[0] });
   } catch (err) {
       console.error(err.message);
-      res.status(500).json({msg: 'Server Error'+err.message});
+      res.status(500).json({ msg: 'Server Error', error: err.message });
   }
 });
+
 
 
 // Eliminar un cupo

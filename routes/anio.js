@@ -6,10 +6,26 @@ const cors = require('cors');
 // Habilita CORS para todas las rutas
 router.use(cors());
 // Obtener todos los anios
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
+  try {
     const { rows } = await pool.query('SELECT * FROM public.anio');
-    res.send(rows);
-  });
+      res.send(rows);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Error del servidor');
+  }
+});
+
+// Obtener solo los grupo_sust activos
+router.get('/active', async (req, res) => {
+  try {
+      const { rows } = await pool.query('SELECT * FROM public.anio WHERE activo = true');
+      res.send(rows);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Error del servidor');
+  }
+});
 
 // Obtener un anio por su ID
 router.get('/:id', (req, res) => {
