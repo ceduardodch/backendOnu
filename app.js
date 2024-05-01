@@ -26,20 +26,12 @@ app.use('/api/importadors', importadorRoutes);
 app.use('/api/paises', paisRoutes);
 
 app.use('/api/proveedors', proveedorRoutes);
-//app.use('/api/proveedors/all', proveedorRoutes);
-//app.use('/api/proveedors/active', proveedorRoutes);
 
 app.use('/api/sustancias', sustanciaRoutes);
-//app.use('/api/sustancias/all', sustanciaRoutes);
-//app.use('/api/sustancias/active', sustanciaRoutes);
 
 app.use('/api/anios', anioRoutes);
-app.use('/api/anios/all', anioRoutes);
-app.use('/api/anios/active', anioRoutes);
 
 app.use('/api/gruposusts', gruposustRoutes);
-//app.use('/api/gruposusts/all', gruposustRoutes);
-//app.use('/api/gruposusts/active', gruposustRoutes);
 
 app.use('/api/cupos', cupoRoutes);
 
