@@ -6,7 +6,7 @@ const cors = require('cors');
 // Habilita CORS para todas las rutas
 router.use(cors());
 // Obtener todos los anios
-router.get('/all', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT * FROM public.anio');
       res.send(rows);

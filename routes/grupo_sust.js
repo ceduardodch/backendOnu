@@ -6,7 +6,7 @@ const cors = require('cors');
 // Habilita CORS para todas las rutas
 router.use(cors());
 // Obtener todos los grupo_susts
-router.get('/all', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
       const { rows } = await pool.query('SELECT * FROM public.grupo_sust');
       res.send(rows);

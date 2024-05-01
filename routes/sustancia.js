@@ -7,7 +7,7 @@ const cors = require('cors');
 router.use(cors());
 // Obtener todos los Sustancias
 
-  router.get('/all', async (req, res) => {
+  router.get('/', async (req, res) => {
     try {
       const { rows } = await pool.query('SELECT * FROM public.sustancia');
         res.send(rows);
