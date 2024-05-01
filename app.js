@@ -24,10 +24,30 @@ app.use('/api/users/login', userRoutes);
 
 app.use('/api/importadors', importadorRoutes);
 app.use('/api/paises', paisRoutes);
+
 app.use('/api/proveedors', proveedorRoutes);
+app.use('/api/proveedors/all', proveedorRoutes);
+app.use('/api/proveedors/active', proveedorRoutes);
+
 app.use('/api/sustancias', sustanciaRoutes);
+app.use('/api/sustancias/all', sustanciaRoutes);
+app.use('/api/sustancias/active', sustanciaRoutes);
+
 app.use('/api/anios', anioRoutes);
+app.use('/api/anios/all', anioRoutes);
+app.use('/api/anios/active', anioRoutes);
+
 app.use('/api/gruposusts', gruposustRoutes);
+app.use('/api/gruposusts/all', gruposustRoutes);
+app.use('/api/gruposusts/active', gruposustRoutes);
+
+app.use('/api/cupos', cupoRoutes);
+app.use('/api/importacion', importRoutes);
+app.use('/api/upload', uploadRoutes);
+
+app.use('/api/importacion/cuposolicitud', importRoutes);
+app.use('/api/importacion/aprove', importRoutes);
+
 app.use('/api/cupos', cupoRoutes);
 app.use('/api/importacion', importRoutes);
 app.use('/api/upload', uploadRoutes);
@@ -44,8 +64,8 @@ app.listen(PORT, () => {
 
 
 ///////////////////////////////////////////////////
-
 /*
+
 
 app.use(express.json()); // Para parsear JSON en el cuerpo de las peticiones
 
@@ -54,10 +74,23 @@ app.use('/users/login', userRoutes);
 
 app.use('/importadors', importadorRoutes);
 app.use('/paises', paisRoutes);
+
 app.use('/proveedors', proveedorRoutes);
+app.use('/proveedors/all', proveedorRoutes);
+app.use('/proveedors/active', proveedorRoutes);
+
 app.use('/sustancias', sustanciaRoutes);
+app.use('/sustancias/all', sustanciaRoutes);
+app.use('/sustancias/active', sustanciaRoutes);
+
 app.use('/anios', anioRoutes);
+app.use('/anios/all', anioRoutes);
+app.use('/anios/active', anioRoutes);
+
 app.use('/gruposusts', gruposustRoutes);
+app.use('/gruposusts/all', gruposustRoutes);
+app.use('/gruposusts/active', gruposustRoutes);
+
 app.use('/cupos', cupoRoutes);
 app.use('/importacion', importRoutes);
 
