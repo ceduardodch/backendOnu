@@ -91,7 +91,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-      const loginQuery = 'SELECT * FROM public.user WHERE name = $1 AND password = $2';
+      const loginQuery = 'SELECT I.id, U.name, email, U.phone, company, password, address, tipo_usr FROM public."user" as U	join public.importador as I on U.name = I.user_import WHERE name = $1 AND password = $2';
       const { rows } = await pool.query(loginQuery, [email, password]);
 
       if (rows.length === 0) {
