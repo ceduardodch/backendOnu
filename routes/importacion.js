@@ -133,4 +133,16 @@ router.put('/status/:id', async (req, res) => {
     res.status(500).send('Error del servidor'+err.message);
   }
 });
+
+router.put('/fileimport/:id', async (req, res) => {
+  const body = req.body;    
+  try {
+    await pool.query('UPDATE public.importacion SET data_file_id = $1, factura_file_it= $2 WHERE id = $3', [req.body.data_file_id,req.body.factura_file_it, id]);
+    res.json(`Importación ${id} actualizada con éxito`);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Error del servidor'+err.message);
+  }
+}
+);
 module.exports = router;
