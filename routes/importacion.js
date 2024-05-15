@@ -6,6 +6,22 @@ const cors = require('cors');
 // Habilita CORS para todas las rutas
 router.use(cors());
 
+// Obtener importaciones por importador con estado Aprobado
+router.get('/importador/:importador', async (req, res) => {
+  const { importador } = req.params;
+  try {
+    const { rows } = await pool.query('SELECT * FROM public.importacion WHERE importador_id = $1 AND status = $2', [importador, 'Aprobado']);
+    if (rows.length === 0) {
+      return res.status(404).json({ msg: 'Importacion no encontrada' });
+    }
+    res.json(rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Error del servidor'+err.message);
+  }
+});
+
+
 // Obtener todos los importacion
 router.get('/', async (req, res) => {
     try {
@@ -135,9 +151,12 @@ router.put('/status/:id', async (req, res) => {
 });
 
 router.put('/fileimport/:id', async (req, res) => {
-  const body = req.body;    
   try {
-    await pool.query('UPDATE public.importacion SET data_file_id = $1, factura_file_it= $2 WHERE id = $3', [req.body.data_file_id,req.body.factura_file_it, id]);
+    console.log(req.body);
+    const id = req.params.id;
+    const dai_file_id = req.body.dai_file_id;
+    const factura_file_it = req.body.factura_file_it;
+    await pool.query('UPDATE public.importacion SET dai_file_id = $1, factura_file_it= $2 WHERE id = $3', [dai_file_id,factura_file_it, id]);
     res.json(`Importación ${id} actualizada con éxito`);
   } catch (err) {
     console.error(err.message);
