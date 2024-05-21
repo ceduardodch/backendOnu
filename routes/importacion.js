@@ -164,4 +164,28 @@ router.put('/fileimport/:id', async (req, res) => {
   }
 }
 );
+
+router.put('/', async (req, res) => {
+
+  const body = req.body;
+  try {
+    // Iniciar transacción
+    await pool.query('BEGIN');
+
+    // Actualizar en la tabla maestra
+    const masterUpdate
+      = 'UPDATE public.importacion SET cupo_restante = $1, total_solicitud = $2, total_pesokg = $3, updated_at = NOW() WHERE id = $4';
+    const masterValues = [body.cupo_restante, body.total_solicitud, body.total_pesokg, body.id];
+    await pool.query(masterUpdate, masterValues);
+    
+    
+  }
+  catch (err
+  ) {
+    await pool.query('ROLLBACK');
+    console.error(err.message);
+    res.status(500).send('Error del servidor'+err.message);
+  }
+}
+);
 module.exports = router;
