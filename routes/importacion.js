@@ -81,8 +81,12 @@ router.get('/:importacion', async (req, res) => {
 //Trae solo el total de la solicitud de importacion para calcular el cupo restate
 router.get('/cuposolicitud/:importador', async (req, res) => {
     const { importador } = req.params;
+    const { filtro } = req.query;
+
     try {
-        const { rows } = await pool.query('SELECT COALESCE(sum(total_solicitud), 0) as total_solicitud FROM public.importacion WHERE importador = $1', [importador]);      if (rows.length === 0) {
+        const { rows } = await pool.query('SELECT COALESCE(sum(total_solicitud), 0) as total_solicitud FROM public.importacion WHERE importador = $1 AND grupo = UPPER($2)', [importador, filtro]);      
+        
+      if (rows.length === 0) {
         return res.status(404).json({ msg: 'Importacion no encontrada' });
       }
       res.json(rows[0]);
