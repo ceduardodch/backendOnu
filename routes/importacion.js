@@ -26,20 +26,20 @@ router.get('/importador/:importador', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         // Consultar maestro
-        const masterQuery = 'SELECT id,created_at,updated_at,month,cupo_asignado,status,cupo_restante,total_solicitud,total_pesoKg,vue,importador,user_id,years,country,proveedor,send_email,grupo FROM public.importacion';
+        const masterQuery = 'SELECT id,created_at,updated_at,authorization_date,solicitud_date,month,cupo_asignado,status,cupo_restante,total_solicitud,total_pesoKg,vue,importador,user_id,years,country,proveedor,send_email,grupo FROM public.importacion';
         const masterResult = await pool.query(masterQuery);
-  
+
         if (masterResult.rows.length === 0) {
             return res.status(404).json({ message: 'Master records not found' });
         }
-  
+
         // Consultar detalles asociados a cada maestro
         //for (let i = 0; i < masterResult.rows.length; i++) {
         //  const detailQuery = `SELECT * FROM public.importacion_detail WHERE importacion = ${masterResult.rows[i].id}`;
          // const detailResult = await pool.query(detailQuery);
          // masterResult.rows[i].details = detailResult.rows;
        // }
-  
+
         res.json(masterResult.rows);
     } catch (err) {
         console.error(err.message);
@@ -53,13 +53,13 @@ router.get('/:importacion', async (req, res) => {
     try {
 
         // Consultar maestro
-        const masterQuery = 'SELECT * FROM public.importacion where id = $1'; 
+        const masterQuery = 'SELECT * FROM public.importacion where id = $1';
         const masterResult = await pool.query(masterQuery, [importacion]);
-  
+
         if (masterResult.rows.length === 0) {
             return res.status(404).json({ message: 'Master records not found' });
         }
-  
+
         // Consultar detalles asociados a cada maestro
         for (let i = 0; i < masterResult.rows.length; i++) {
           const detailQuery = `SELECT * FROM public.importacion_detail WHERE importacion = ${masterResult.rows[i].id}`;
@@ -69,7 +69,7 @@ router.get('/:importacion', async (req, res) => {
         res.json(masterResult.rows);
 
       }
-    
+
     catch (err) {
 
         console.error(err.message);
@@ -84,8 +84,8 @@ router.get('/cuposolicitud/:importador', async (req, res) => {
     const { filtro } = req.query;
 
     try {
-        const { rows } = await pool.query('SELECT COALESCE(sum(total_solicitud), 0) as total_solicitud FROM public.importacion WHERE importador = $1 AND grupo = UPPER($2)', [importador, filtro]);      
-        
+        const { rows } = await pool.query('SELECT COALESCE(sum(total_solicitud), 0) as total_solicitud FROM public.importacion WHERE importador = $1 AND grupo = UPPER($2)', [importador, filtro]);
+
       if (rows.length === 0) {
         return res.status(404).json({ msg: 'Importacion no encontrada' });
       }
@@ -96,7 +96,7 @@ router.get('/cuposolicitud/:importador', async (req, res) => {
     }});
 
 router.post('/', async (req, res) => {
-  const body = req.body;    
+  const body = req.body;
   try {
     // Iniciar transacción
     await pool.query('BEGIN');
@@ -186,7 +186,7 @@ router.put('/', async (req, res) => {
     await pool.query(masterUpdate, masterValues);
     res.json(`Importación ${id} actualizada con éxito`);
 
-    
+
   }
   catch (err
   ) {
